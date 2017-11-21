@@ -1,10 +1,10 @@
 ---
 # These tasks install http and the php modules.
 
-- name: Install http and php etc
+- name: Install Tomcat
   yum: name={{ item }} state=present
   with_items:
-   - httpd
+   - 
    - php
    - php-mysql
    - git

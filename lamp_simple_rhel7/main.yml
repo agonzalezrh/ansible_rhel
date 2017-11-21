@@ -1,10 +1,9 @@
 ---
 # This playbook deploys the whole application stack in this site.
 - name: instalar cosas
-  hosts: all
+  hosts: localhost
   remote_user: root
   roles:
-    - common
     - { role: apache, when: '"apache" in roles.split(",")' }
     - { role: mysql, when: '"mysql" in roles.split(",")' }
     - { role: php, when: '"php" in roles.split(",")' }
