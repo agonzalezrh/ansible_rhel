@@ -1,7 +1,7 @@
 ---
 # This playbook deploys the whole application stack in this site.
 - name: instalar cosas
-  hosts: localhost
+  hosts: all
   remote_user: root
   roles:
     - { role: apache, when: '"apache" in roles.split(",")' }
