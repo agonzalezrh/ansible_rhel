@@ -8,11 +8,21 @@
    - libsemanage-python
    - libselinux-python
 
-- name: insert firewalld rule for httpd
-  firewalld: port={{ httpd_port }}/tcp permanent=true state=enabled immediate=yes
+- name: start httpd service
+  service: name=httpd state=started
 
-- name: http service state
-  service: name=httpd state=started enabled=yes
+- name: Open Port 80
+  firewalld: service=http permanent=true state=enabled
 
-- name: Configure SELinux to allow httpd to connect to remote database
-  seboolean: name=httpd_can_network_connect_db state=true persistent=yes
+- name: Start firewalld service
+  service: name=firewalld state=restarted
+
+
+#- name: insert firewalld rule for httpd
+#  firewalld: port={{ httpd_port }}/tcp permanent=true state=enabled immediate=yes
+
+#- name: http service state
+#  service: name=httpd state=started enabled=yes
+
+#- name: Configure SELinux to allow httpd to connect to remote database
+#  seboolean: name=httpd_can_network_connect_db state=true persistent=yes
