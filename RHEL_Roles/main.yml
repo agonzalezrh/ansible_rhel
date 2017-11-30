@@ -1,6 +1,6 @@
 ---
 # This playbook deploys the whole application stack in this site.
-- name: instalar cosas
+- name: Trigguer list of roles sent from Service Dialog using extra_var roles
   hosts: all
   environment:
     ansible_host_key_checking: false
