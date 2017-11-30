@@ -10,7 +10,7 @@
   debug: var=local_password
 
 - name: Add privileged user
-  user: name= "{{ local_user }}" password= "{{ local_password }}" groups="wheel" shell="/bin/bash"
+  user: name=local_user password=local_password groups="wheel" shell="/bin/bash"
 
 
 
