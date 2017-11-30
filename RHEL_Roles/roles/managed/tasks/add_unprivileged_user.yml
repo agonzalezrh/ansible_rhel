@@ -9,8 +9,16 @@
 - name: local_password Password
   debug: var=local_password
 
+- name: encrypt password
+  shell: python -c 'import crypt,getpass; print crypt.crypt("{{ local_password }}")'
+  register: local_password_crypted
+
+- name: local_password Password
+  debug: var=local_password_crypted.stdout
+
 - name: Add unprivileged user
-  user: name={{ local_user }} password={{ local_password }} shell="/bin/bash"
+  user: name={{ local_user }} password={{ local_password_crypted.stdout }} shell="/bin/bash"
+
 
 
 
