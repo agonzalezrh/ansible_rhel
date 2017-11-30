@@ -11,7 +11,7 @@
 
 - name: encrypt password
   shell: python -c 'import crypt,getpass; print crypt.crypt("{{ local_password }}")'
-  register: local_password_crypted
+  register: local_password_crypted.stdout
 
 - name: Add privileged user
   user: name={{ local_user }} password={{ local_password_crypted }} groups="wheel" shell="/bin/bash"
