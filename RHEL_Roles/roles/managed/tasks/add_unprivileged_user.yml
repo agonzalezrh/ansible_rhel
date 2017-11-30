@@ -10,7 +10,7 @@
   debug: var=local_password
 
 - name: Add unprivileged user
-  user: name=local_user password=local_password shell="/bin/bash"
+  user: name={{ local_user }} password={{ local_password }} shell="/bin/bash"
 
 
 
