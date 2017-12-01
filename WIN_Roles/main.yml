@@ -5,6 +5,7 @@
   environment:
     ansible_host_key_checking: false
   remote_user: root
+  gather_facts: false
   pre_tasks:
     - name: logging manageiq object
       debug: var=manageiq
