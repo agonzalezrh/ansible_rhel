@@ -1,0 +1,2 @@
+- name: Run Patch Cycle
+  win_command: C:\Program Files\Altiris\Altiris Agent\Agents\PatchMgmtAgent\AeXPatchUtil.exe /Xa

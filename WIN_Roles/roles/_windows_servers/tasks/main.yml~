@@ -1,0 +1,85 @@
+- name: Download Bosch Certificate File
+  win_get_url:
+    url: http://satellite.rh-sddc.test-bosch.com/pub/customer/Certificates/BOSCH-CA-DE.cer
+    dest: C:\BOSCH-CA-DE.cer
+
+- name: Download Bosch Certificate File1
+  win_get_url:
+    url: http://satellite.rh-sddc.test-bosch.com/pub/customer/Certificates/BOSCH-CA1-DE.cer
+    dest: C:\BOSCH-CA1-DE.cer
+
+- name: Add Bosch Certificate
+  win_command: 'certutil.exe -addstore Root C:\BOSCH-CA-DE.cer'
+
+# - name: Wait1
+#   win_command: timeout 20 /NOBREAK
+
+# - name: Add Bosch Certificate1
+#   win_command: 'certutil.exe -addstore Root C:\BOSCH-CA1-DE.cer'
+
+# - name: Wait2
+#   win_command: 'timeout 20 /NOBREAK'
+
+- name: Delete Certificate File
+  win_file:
+    path: C:\BOSCH-CA-DE.cer
+    state: absent
+
+- name: Delete Certificate File1
+  win_file:
+    path: C:\BOSCH-CA1-DE.cer
+    state: absent
+
+- name: Install AeXNSCHTTPs
+  win_package:
+    path: http://satellite.rh-sddc.test-bosch.com/pub/customer/Altiris_agent/AeXNSCHTTPs.exe
+    product_id: 'AeXNSCHTTPs'
+    arguments: '/q /norestart'
+    state: present
+
+# - name: Wait3
+#   win_command: t'imeout 20 /NOBREAK'
+
+- name: Install SoftwareManagementSolution_Plugin_x64
+  win_package:
+    path: http://satellite.rh-sddc.test-bosch.com/pub/customer/Altiris_agent/SoftwareManagementSolution_Plugin_x64.msi
+#    product_id: '{7DEBE4EB-6B40-3766-BB35-5CBBC385DA37}'
+    arguments: '/qn /norestart'
+    state: present
+
+# - name: Wait4
+#   win_command: 'timeout 20 /NOBREAK'
+
+- name: Install Symantec_InventoryAgent_x64
+  win_package:
+    path: http://satellite.rh-sddc.test-bosch.com/pub/customer/Altiris_agent/Symantec_InventoryAgent_x64.msiw
+#    product_id: '{7DEBE4EB-6B40-3766-BB35-5CBBC385DA37}'
+    arguments: '/qn /norestart'
+    state: present
+
+# - name: Wait5
+#   win_command: 'timeout 20 /NOBREAK'
+
+- name: Install Symantec_ServerInventoryAgent_x64
+  win_package:
+    path: http://satellite.rh-sddc.test-bosch.com/pub/customer/Altiris_agent/Symantec_ServerInventoryAgent_x64.msi
+#    product_id: '{7DEBE4EB-6B40-3766-BB35-5CBBC385DA37}'
+    arguments: '/qn /norestart'
+    state: present
+
+# - name: Wait6
+#   win_command: timeout 30 /NOBREAK
+
+- name: Install Altiris_PatchMgmtAgent_x64
+  win_package:
+    path: http://satellite.rh-sddc.test-bosch.com/pub/customer/Altiris_agent/Altiris_PatchMgmtAgent_x64.msiw
+#    product_id: '{7DEBE4EB-6B40-3766-BB35-5CBBC385DA37}'
+    arguments: '/qn /norestart'
+    state: present
+
+# - name: Wait7
+#   win_command: timeout 60 /NOBREAK
+
+- name: Run Patch Cycle
+  win_command: 'C:\Program Files\Altiris\Altiris Agent\Agents\PatchMgmtAgent\AeXPatchUtil.exe /Xa'
+

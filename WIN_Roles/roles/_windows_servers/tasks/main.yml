@@ -104,9 +104,5 @@
 #     arguments: '/qn /norestart'
 #     state: present
 
-- name: Wait7
-  win_command: timeout 60 /NOBREAK
-
-- name: Run Patch Cycle
-  win_command: C:\Program Files\Altiris\Altiris Agent\Agents\PatchMgmtAgent\AeXPatchUtil.exe /Xa
-
+# - name: Wait7
+#   win_command: timeout 60 /NOBREAK
