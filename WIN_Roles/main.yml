@@ -13,9 +13,8 @@
 
   roles:
     - { role: altiris, when: '"altiris" in rolescfme.split(",")' }
-    - { role: sql, when: '"sql" in rolescfme.split(",")' }
-    - { role: iis, when: '"iis" in rolescfme.split(",")' }
+    - { role: sql, when: '"SQLServer" in rolescfme.split(",")' }
+    - { role: iis, when: '"IIS" in rolescfme.split(",")' }
     - { role: ipconfig, when: '"ipconfig" in rolescfme.split(",")' }
-    - { role: windows_update, when: '"windows_update" in rolescfme.split(",")' }
     - { role: managed, when: '"managed" in rolescfme.split(",")' }
     - { role: unmanaged, when: '"unmanaged" in rolescfme.split(",")' }
