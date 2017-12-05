@@ -68,8 +68,3 @@
 
 - name: Dump connectivity results
   debug: 'msg="command_result.stdout"'
-
-become: true
-become_user: admin
-become_method: su
-
