@@ -9,8 +9,8 @@
 
 - name: Add unprivileged user
   win_user:
-    name: {{ local_user }}
-    password: {{ local_password }}
+    name: "{{ local_user }}"
+    password: "{{ local_password }}"
     state: present
     groups:
      - Remote Desktop Users

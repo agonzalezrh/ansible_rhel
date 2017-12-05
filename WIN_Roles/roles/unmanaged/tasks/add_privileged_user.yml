@@ -9,8 +9,8 @@
 
 - name: Add privileged user
   win_user:
-    name: {{ local_user }}
-    password: {{ local_password }}
+    name: "{{ local_user }}"
+    password: "{{ local_password }}"
     state: present
     groups:
      - Administrators
