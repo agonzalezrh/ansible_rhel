@@ -21,7 +21,7 @@
   debug: var=ocp_image
 
 - name: login to OpenShift
-  shell: "/root/oc login --insecure-skip-tls-verify=true --token=_2weB6JERB70OdFmzfHcBBKv0wjoVxzT-qK3YPwAFXc  https://openshift.{{ hailstorm_dns_domain }}/"
+  shell: "/root/oc login --insecure-skip-tls-verify=true  https://openshift.{{ hailstorm_dns_domain }}/"
 
 - name: check existing projects
   shell: "/root/oc get projects | awk '{ print $1 }'"
