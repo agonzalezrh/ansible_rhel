@@ -51,7 +51,7 @@
   changed_when: "'exists' not in command_result.stderr"
 
 - name: Create OpenShift application from previously created images
-  shell: "/root/oc new-app -n {{ redhat_container_test_project }} {{ app_name }} -l app={{ app_name }}"
+  shell: "echo /root/oc new-app -n {{ redhat_container_test_project }} {{ app_name }} -l app={{ app_name }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
