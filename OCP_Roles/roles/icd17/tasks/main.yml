@@ -45,8 +45,7 @@
   tags: project
 
 - name: Create OpenShift new-build based on RHEL7.4 base image
-  shell: "/root/oc new-build -D 
-'FROM registry.access.redhat.com/rhel7.4:latest\nRUN yum install -y iputils net-tools\nCMD sleep infinity & wait' --name={{ app_name }} -n {{ redhat_container_test_project }} -l app={{ app_name }}"
+  shell: "/root/oc new-build -D 'FROM registry.access.redhat.com/rhel7.4:latest\nRUN yum install -y iputils net-tools\nCMD sleep infinity & wait' --name={{ app_name }} -n {{ redhat_container_test_project }} -l app={{ app_name }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
