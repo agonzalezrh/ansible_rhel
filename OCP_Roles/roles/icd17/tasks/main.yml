@@ -57,7 +57,7 @@
   changed_when: "'exists' not in command_result.stderr"
 
 - name: Output Creation of the application 
-  debug: 'msg="command_result.stdout"'
+  debug: 'msg="{{ command_result.stdout }}"'
 
 - name: get git pod id
   shell: /root/oc get pods -n {{ redhat_container_test_project }} | grep {{ app_name }} | awk '{ print $1 }'
@@ -70,4 +70,4 @@
   failed_when: "'Unknown' in command_result.stderr and command_result.rc != 0"
 
 - name: Dump connectivity results
-  debug: 'msg="command_result.stdout"'
+  debug: 'msg="{{ command_result.stdout }}"'
