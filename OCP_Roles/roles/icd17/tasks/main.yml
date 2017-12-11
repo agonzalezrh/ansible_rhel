@@ -44,11 +44,23 @@
   changed_when: false
   tags: project
 
+- name: assign admin permissions to user1
+  shell: "oc adm policy add-role-to-user admin user1 -n {{ redhat_container_test_project }}"
+  changed_when: false
+  tags: project
+
+#- name: Create OpenShift new-build based on RHEL7.4 base image
+#  shell: "/root/oc new-build -D 'FROM registry.access.redhat.com/rhel7.4:latest\nRUN yum install -y iputils net-tools\nCMD sleep infinity & wait' --name={{ app_name }} -n {{ redhat_container_test_project }} -l app={{ app_name }}"
+#  register: command_result
+#  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+#  changed_when: "'exists' not in command_result.stderr"
+
 - name: Create OpenShift new-build based on RHEL7.4 base image
-  shell: "/root/oc new-build -D 'FROM registry.access.redhat.com/rhel7.4:latest\nRUN yum install -y iputils net-tools\nCMD sleep infinity & wait' --name={{ app_name }} -n {{ redhat_container_test_project }} -l app={{ app_name }}"
+  shell: "oc new-build -D 'FROM registry.access.redhat.com/rhel7.4:latest\nUSER root\nRUN yum install -y iputils net-tools httpd\nEXPOSE 80\nCMD exec /usr/sbin/apachectl -DFOREGROUND' --name={{ app_name }} -n {{ redhat_container_test_project }} -l app={{ app_name }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
+
 
 - name: Create OpenShift application from previously created images
   shell: "/root/oc new-app -n {{ redhat_container_test_project }} {{ app_name }}:latest --allow-missing-imagestream-tags -l app={{ app_name }}"
@@ -56,11 +68,18 @@
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
 
-- name: Output Creation of the application stdout
+- name: Expose the service
+  shell: "oc expose svc {{ app_name }} -n {{ redhat_container_test_project }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+
+
+- name: Output last command stdout
   debug: 'msg="{{ command_result.stdout }}"'
 
 
-- name: Output Creation of the application stderr 
+- name: Output last command  stderr 
   debug: 'msg="{{ command_result.stderr }}"'
 
 - name: get git pod id
