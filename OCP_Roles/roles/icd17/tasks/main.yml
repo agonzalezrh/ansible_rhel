@@ -68,12 +68,17 @@
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
 
+- name: Expose the dc
+  shell: "/root/oc expose dc {{ app_name }} --port=80 -n {{ redhat_container_test_project }}"
+  register: command_result
+  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
+  changed_when: "'exists' not in command_result.stderr"
+
 - name: Expose the service
   shell: "/root/oc expose svc {{ app_name }} -n {{ redhat_container_test_project }}"
   register: command_result
   failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-
 
 - name: Output last command stdout
   debug: 'msg="{{ command_result.stdout }}"'
