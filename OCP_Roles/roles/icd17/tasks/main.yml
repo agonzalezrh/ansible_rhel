@@ -79,7 +79,7 @@
   register: command_result
 #  failed_when: "'exists' not in command_result.stderr and command_result.rc != 0"
   changed_when: "'exists' not in command_result.stderr"
-    register: command_result
+  register: command_result
   until: command_result.rc == 0
   retries: 5
   delay: 10
