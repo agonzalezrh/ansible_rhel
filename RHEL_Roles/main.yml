@@ -14,6 +14,7 @@
     - { role: apache, when: '"apache" in rolescfme.split(",")' }
     - { role: mysql, when: '"mysql" in rolescfme.split(",")' }
     - { role: php, when: '"php" in rolescfme.split(",")' }
+    - { role: jdk, when: '"jdk" in rolescfme.split(",")' }
     - { role: tomcat, when: '"tomcat" in rolescfme.split(",")' }
     - { role: managed, when: '"managed" in rolescfme.split(",")' }
     - { role: unmanaged, when: '"unmanaged" in rolescfme.split(",")' }
