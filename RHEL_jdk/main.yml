@@ -1,0 +1,14 @@
+---
+# This playbook deploys the whole application stack in this site.
+- name: Trigguer list of roles sent from Service Dialog using extra_var roles
+  hosts: all
+  environment:
+    ansible_host_key_checking: false
+  remote_user: root
+  pre_tasks:
+    - name: logging manageiq object
+      debug: var=manageiq
+      when: manageiq is defined
+
+  roles:
+    - { role: jdk, when: '"jdk" in rolescfme.split(",")' }
