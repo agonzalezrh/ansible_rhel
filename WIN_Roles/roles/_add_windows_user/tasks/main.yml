@@ -1,7 +1,0 @@
-- name: Add mpfuetzn login
-  win_user:
-    name: mpfuetzn
-    password: Geheim2018!
-    state: present
-    groups:
-     - Administrators
