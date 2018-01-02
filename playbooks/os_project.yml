@@ -1,0 +1,57 @@
+---
+- name: Do something on OpenStack with Ansible-Inside
+  hosts: localhost
+  connection: local
+  environment:
+    OS_CLIENT_CONFIG_FILE: /tmp/openstack.yaml
+
+  vars:
+    os_ssl: "{{ os_ssl | default('false') }}"
+
+  tasks:
+    - debug: var=os_ssl
+
+    - name: Create OS_CLIENT_CONFIG_FILE for Non-SSL
+      template:
+        src: "{{ playbook_dir }}/../templates/openstack.yaml.j2"
+        dest: /tmp/openstack.yaml
+      when: os_ssl == "false"
+
+    - name: Create OS_CLIENT_CONFIG_FILE for SSL
+      template:
+        src: "{{ playbook_dir }}/../templates/openstack.yaml.ssl.j2"
+        dest: /tmp/openstack.yaml
+      when: os_ssl == "true"
+
+    # https://docs.ansible.com/ansible/os_auth_module.html
+    - name: Authenticate to specified OpenStack provider
+      os_auth:
+        cloud: mycloud
+
+    # Gather facts about previously created projects
+    - os_project_facts:
+        cloud: mycloud
+    - debug:
+        var: openstack_projects
+
+    # Gather facts about a previously created project by name
+    - os_project_facts:
+        cloud: mycloud
+        name: admin
+    - debug:
+        var: openstack_projects
+
+    # Create a project
+    - os_project:
+        cloud: mycloud
+        state: present
+        name: demoproject
+        description: demodescription
+        domain_id: default
+        enabled: True
+
+    # Delete a project
+    # - os_project:
+    #     cloud: mycloud
+    #     state: absent
+    #     name: demoproject
