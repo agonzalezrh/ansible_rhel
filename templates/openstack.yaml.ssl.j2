@@ -2,11 +2,9 @@ clouds:
   mycloud:
     region_name: regionOne
     auth:
-#      username: {{ os_user }}
-#      password: {{ os_password }}
-      username: admin
-      password: 0pen_5ource
-      project_name: demo-vms
+      username: "{{ os_user }}"
+      password: "{{ os_password }}"
+      project_name: admin
       domain_name: hailstorm
       auth_url: https://{{ os_host }}:13000/v3
     validate_certs: no
