@@ -23,4 +23,3 @@
         state: present
         name: "{{ network_name }}"
         external: true
-        shared: true
