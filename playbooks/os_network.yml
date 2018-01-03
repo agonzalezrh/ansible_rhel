@@ -31,6 +31,12 @@
 
     # https://docs.ansible.com/ansible/os_network_module.html
     - os_network:
+        auth:
+          username: admin
+          password: 0pen_5ource
+          project_name: admin
+          domain_name: hailstorm
+          auth_url: https://{{ os_host }}:13000/v3
         cloud: mycloud
         state: present
         name: "{{ network_name }}"
