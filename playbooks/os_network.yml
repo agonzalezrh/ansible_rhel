@@ -24,12 +24,12 @@
         dest: /tmp/openstack.yaml
 #      when: os_ssl == "true"
 
-    # https://docs.ansible.com/ansible/os_auth_module.html
+# https://docs.ansible.com/ansible/os_auth_module.html
     - name: Authenticate to specified OpenStack provider
       os_auth:
         cloud: mycloud
 
-    # https://docs.ansible.com/ansible/os_network_module.html
+# https://docs.ansible.com/ansible/os_network_module.html
     - os_network:
         cloud: mycloud
         state: present
