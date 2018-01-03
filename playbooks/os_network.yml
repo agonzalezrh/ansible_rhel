@@ -14,8 +14,8 @@
       os_network:
         region_name: regionOne
         auth:
-          username: {{ os_user }}
-          password: {{ os_password }}
+          username: "{{ os_user }}"
+          password: "{{ os_password }}"
 #          username: admin
 #          password: 0pen_5ource
           project_name: demo-vms
