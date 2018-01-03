@@ -1,9 +1,0 @@
-clouds:
-  mycloud:
-    region_name: RegionOne
-    auth:
-      username: admin
-      password: mypassword
-      project_name: admin
-      auth_url: http://192.168.42.133:5000/v2.0
-    validate_certs: no
