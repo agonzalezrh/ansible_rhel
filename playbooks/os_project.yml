@@ -12,6 +12,19 @@
     - debug: var=os_project
     - debug: var=os_projectdescription
 
+    - name: Get Facts of Project
+      os_project_facts:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{ os_user }}"
+          password: "{{ os_password }}"
+          project_name: demo-vms
+          domain_name: hailstorm
+        validate_certs: no
+        name: demo-vms
+
+    - debug: var=openstack_projects
+
     - name: Create a Project
       os_project:
         region_name: regionOne
@@ -22,12 +35,8 @@
           project_name: demo-vms
           domain_name: hailstorm
         validate_certs: no
-# Customer:
-        domain_id: "2a25a7ad837c463e912947893c651a34"
-# Storm4:
-#        domain_id: "f415c7d93b0544ec87dc1f59535f59f5"
-# Storm6:
-#        domain_id: "3e2327c255b640cfa8f15611e014003c"
+
+        domain_id: "{{ openstack_projects[0].domain_id }}"
         name: "{{ os_project }}"
         description: "{{ os_projectdescription }}"
         state: present
@@ -142,17 +151,4 @@
         user: cfme-bind-user
         role: admin
         project: "{{ os_project }}"
-
-#    - name: Get Facts of Project
-#      os_project_facts:
-#        auth:
-#          auth_url: https://{{ os_host }}:13000/v3
-#          username: "{{ os_user }}"
-#          password: "{{ os_password }}"
-#          project_name: demo-vms
-#          domain_name: hailstorm
-#        validate_certs: no
-#        name: "{{ os_project }}"
-#
-#    - debug: var=openstack_projects
 
