@@ -1,0 +1,44 @@
+---
+- name: Do something on OpenStack with Ansible-Inside
+  hosts: localhost
+  connection: local
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+
+  tasks:
+    - debug: var=os_host
+    - debug: var=os_user
+    - debug: var=os_password
+    - debug: var=os_project
+    - debug: var=os_projectdescription
+
+    - name: Get Facts of Project
+      os_project_facts:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{ os_user }}"
+          password: "{{ os_password }}"
+          project_name: demo-vms
+          domain_name: hailstorm
+        validate_certs: no
+        name: demo-vms
+
+    - debug: var=openstack_projects
+
+    - name: Create a Project
+      os_project:
+        region_name: regionOne
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{ os_user }}"
+          password: "{{ os_password }}"
+          project_name: demo-vms
+          domain_name: hailstorm
+        validate_certs: no
+        domain_id: "{{ openstack_projects[0].domain_id }}"
+        name: "{{ os_project }}"
+        description: "{{ os_projectdescription }}"
+        state: absent
+        enabled: True
+
+

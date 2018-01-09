@@ -2,25 +2,147 @@
 - name: Do something on OpenStack with Ansible-Inside
   hosts: localhost
   connection: local
+  environment:
+    OS_IDENTITY_API_VERSION: 3
+
 
   tasks:
-    - debug: var=network_name
     - debug: var=os_host
     - debug: var=os_user
     - debug: var=os_password
+    - debug: var=os_project
+    - debug: var=os_network_name
 
-# https://docs.ansible.com/ansible/os_network_module.html
     - name: Add a network
       os_network:
-        region_name: regionOne
         auth:
-          username: "{{ os_user }}"
-          password: "{{ os_password }}"
-          project_name: demo-vms
-          domain_name: hailstorm
           auth_url: https://{{ os_host }}:13000/v3
+          username: "{{os_user }}"
+          password: "{{ os_password }}"
+          project_name: "{{ os_project }}"
+          domain_name: hailstorm
         validate_certs: no
+        region_name: regionOne
         state: present
-        name: "{{ network_name }}"
-        external: true
-        shared: true
+        name: "{{ os_network_name }}"
+        project: "{{ os_project }}"
+#        provider_network_type: 
+#        provider_physical_network: 
+#        provider_segmentation:id: 
+        external: false
+        shared: false
+
+    - name: Create the test subnet
+      os_subnet:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{os_user }}"
+          password: "{{ os_password }}"
+          project_name: "{{ os_project }}"
+          domain_name: hailstorm
+        validate_certs: no
+        region_name: regionOne
+        state: present
+        network_name: "{{ os_network_name }}"
+        name: "{{ os_network_name + '_sub'}}"
+        ip_version: 4
+        cidr: 172.21.0.0/16
+        gateway_ip: 172.21.0.1
+        enable_dhcp: yes
+        dns_nameservers:
+          - 10.116.57.11
+
+    - name: Create the test router
+      ignore_errors: yes #for some reasons, re-running this task gives errors
+      os_router:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{os_user }}"
+          password: "{{ os_password }}"
+          project_name: "{{ os_project }}"
+          domain_name: hailstorm
+        validate_certs: no
+        region_name: regionOne
+        state: present
+        name: "{{ os_network_name + '_router' }}"
+        network: guests
+        external_fixed_ips:
+          - subnet: sub_guests
+        interfaces:
+          - "{{ os_network_name + '_sub'}}"
+
+    - name: Create a new security group
+      os_security_group:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{os_user }}"
+          password: "{{ os_password }}"
+          project_name: "{{ os_project }}"
+          domain_name: hailstorm
+        validate_certs: no
+        region_name: regionOne
+        state: present
+        name: "{{ os_network_name }}"
+
+    - name: Create a new security group allowing any ICMP
+      os_security_group_rule:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{os_user }}"
+          password: "{{ os_password }}"
+          project_name: "{{ os_project }}"
+          domain_name: hailstorm
+        validate_certs: no
+        region_name: regionOne
+        security_group: "{{ os_network_name }}"
+        protocol: icmp
+        remote_ip_prefix: 0.0.0.0/0
+
+    - name: Create a new security group allowing any SSH connection
+      os_security_group_rule:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{os_user }}"
+          password: "{{ os_password }}"
+          project_name: "{{ os_project }}"
+          domain_name: hailstorm
+        validate_certs: no
+        region_name: regionOne
+        security_group: "{{ os_network_name }}"
+        protocol: tcp
+        port_range_min: 22
+        port_range_max: 22
+        remote_ip_prefix: 0.0.0.0/0
+
+    - name: Create a new security group allowing any RDP connection
+      os_security_group_rule:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{os_user }}"
+          password: "{{ os_password }}"
+          project_name: "{{ os_project }}"
+          domain_name: hailstorm
+        validate_certs: no
+        region_name: regionOne
+        security_group: "{{ os_network_name }}"
+        protocol: tcp
+        port_range_min: 3389
+        port_range_max: 3389
+        remote_ip_prefix: 0.0.0.0/0
+
+    - name: Create a new security group allowing any Ansible connection
+      os_security_group_rule:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{os_user }}"
+          password: "{{ os_password }}"
+          project_name: "{{ os_project }}"
+          domain_name: hailstorm
+        validate_certs: no
+        region_name: regionOne
+        security_group: "{{ os_network_name }}"
+        protocol: tcp
+        port_range_min: 5986
+        port_range_max: 5986
+        remote_ip_prefix: 0.0.0.0/0
+
