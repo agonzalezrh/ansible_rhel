@@ -3,55 +3,156 @@
   hosts: localhost
   connection: local
   environment:
-    OS_CLIENT_CONFIG_FILE: /tmp/openstack.yaml
-
-  vars:
-    os_ssl: "{{ os_ssl | default('false') }}"
+    OS_IDENTITY_API_VERSION: 3
 
   tasks:
-    - debug: var=os_ssl
+    - debug: var=os_host
+    - debug: var=os_user
+    - debug: var=os_password
+    - debug: var=os_project
+    - debug: var=os_projectdescription
 
-#    - name: Create OS_CLIENT_CONFIG_FILE for Non-SSL
-#      template:
-#        src: "{{ playbook_dir }}/../templates/openstack.yaml.j2"
-#        dest: /tmp/openstack.yaml
-#      when: os_ssl == "false"
-
-    - name: Create OS_CLIENT_CONFIG_FILE for SSL
-      template:
-        src: "{{ playbook_dir }}/../templates/openstack.yaml.ssl.j2"
-        dest: /tmp/openstack.yaml
-#      when: os_ssl == "true"
-
-    # https://docs.ansible.com/ansible/os_auth_module.html
-    - name: Authenticate to specified OpenStack provider
-      os_auth:
-        cloud: mycloud
-
-    # Gather facts about previously created projects
-    - os_project_facts:
-        cloud: mycloud
-    - debug:
-        var: openstack_projects
-
-    # Gather facts about a previously created project by name
-    - os_project_facts:
-        cloud: mycloud
-        name: admin
-    - debug:
-        var: openstack_projects
-
-    # Create a project
-    - os_project:
-        cloud: mycloud
+    - name: Create a Project
+      os_project:
+        region_name: regionOne
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{ os_user }}"
+          password: "{{ os_password }}"
+          project_name: demo-vms
+          domain_name: hailstorm
+        validate_certs: no
+# Customer:
+        domain_id: "2a25a7ad837c463e912947893c651a34"
+# Storm4:
+#        domain_id: "f415c7d93b0544ec87dc1f59535f59f5"
+# Storm6:
+#        domain_id: "3e2327c255b640cfa8f15611e014003c"
+        name: "{{ os_project }}"
+        description: "{{ os_projectdescription }}"
         state: present
-        name: demoproject
-        description: demodescription
-        domain_id: default
         enabled: True
 
-    # Delete a project
-    # - os_project:
-    #     cloud: mycloud
-    #     state: absent
-    #     name: demoproject
+    - name: Change Quota of Project
+      os_quota:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{ os_user }}"
+          password: "{{ os_password }}"
+          project_name: demo-vms
+          domain_name: hailstorm
+        validate_certs: no
+        name: "{{ os_project }}"
+        cores: 10
+        ram: 10240
+        gigabytes: 100
+#        name: "{{ item.name }}"
+#        backup_gigabytes: "{{ item.backup_gigabytes }}"
+#        backups: "{{ item.backups }}"
+#        cores: "{{ item.cores }}"
+#        fixed_ips: "{{ item.fixed_ips }}"
+#        floating_ips: "{{ item.floating_ips }}"
+#        floatingip: "{{ item.floatingip }}"
+#        gigabytes: "{{ item.gigabytes }}"
+#        injected_file_size: "{{ item.injected_file_size }}"
+#        injected_files: "{{ item.injected_files }}"
+#        injected_path_size: "{{ item.injected_path_size }}"
+#        instances: "{{ item.instances }}"
+#        key_pairs: "{{ item.key_pairs }}"
+#        loadbalancer: "{{ item.loadbalancer }}"
+#        per_volume_gigabytes: "{{ item.per_volume_gigabytes }}"
+#        pool: "{{ item.pool }}"
+#        port: "{{ item.port }}"
+#        properties: "{{ item.properties }}"
+#        ram: "{{ item.ram }}"
+#        security_group_rule: "{{ item.security_group_rule }}"
+#        security_group: "{{ item.security_group }}"
+#        server_group_members: "{{ item.server_group_members }}"
+#        server_groups: "{{ item.server_groups }}"
+#        snapshots: "{{ item.snapshots }}"
+#        volumes: "{{ item.volumes }}"
+#        volumes_types:
+#          volumes_lvm: "{{ item.volumes_lvm }}"
+#        snapshots_types:
+#          snapshots_lvm: "{{ item.snapshots_lvm }}"
+#        gigabytes_types:
+#          gigabytes_lvm: "{{ item.gigabytes_lvm }}"
+
+    - name: Add User admin to project
+      os_user_role:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{ os_user }}"
+          password: "{{ os_password }}"
+          project_name: demo-vms
+          domain_name: hailstorm
+        validate_certs: no
+        user: admin
+        role: admin
+        project: "{{ os_project }}"
+
+    - name: Add User consumer to project
+      os_user_role:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{ os_user }}"
+          password: "{{ os_password }}"
+          project_name: demo-vms
+          domain_name: hailstorm
+        validate_certs: no
+        user: consumer
+        role: _member_
+        project: "{{ os_project }}"
+
+    - name: Add User approver to project
+      os_user_role:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{ os_user }}"
+          password: "{{ os_password }}"
+          project_name: demo-vms
+          domain_name: hailstorm
+        validate_certs: no
+        user: approver
+        role: _member_
+        project: "{{ os_project }}"
+
+    - name: Add User developer to project
+      os_user_role:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{ os_user }}"
+          password: "{{ os_password }}"
+          project_name: demo-vms
+          domain_name: hailstorm
+        validate_certs: no
+        user: developer
+        role: _member_
+        project: "{{ os_project }}"
+
+    - name: Add User cfme-bind-user to project
+      os_user_role:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{ os_user }}"
+          password: "{{ os_password }}"
+          project_name: demo-vms
+          domain_name: hailstorm
+        validate_certs: no
+        user: cfme-bind-user
+        role: admin
+        project: "{{ os_project }}"
+
+#    - name: Get Facts of Project
+#      os_project_facts:
+#        auth:
+#          auth_url: https://{{ os_host }}:13000/v3
+#          username: "{{ os_user }}"
+#          password: "{{ os_password }}"
+#          project_name: demo-vms
+#          domain_name: hailstorm
+#        validate_certs: no
+#        name: "{{ os_project }}"
+#
+#    - debug: var=openstack_projects
+
