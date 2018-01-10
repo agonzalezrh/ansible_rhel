@@ -51,6 +51,49 @@
         enable_dhcp: yes
         dns_nameservers:
           - 10.116.57.11
+      when: os_network_name == "app-server"
+
+    - name: Create the test subnet
+      os_subnet:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{os_user }}"
+          password: "{{ os_password }}"
+          project_name: "{{ os_project }}"
+          domain_name: hailstorm
+        validate_certs: no
+        region_name: regionOne
+        state: present
+        network_name: "{{ os_network_name }}"
+        name: "{{ os_network_name + '_sub'}}"
+        ip_version: 4
+        cidr: 172.22.0.0/16
+        gateway_ip: 172.22.0.1
+        enable_dhcp: yes
+        dns_nameservers:
+          - 10.116.57.11
+      when: os_network_name == "db-server"
+
+    - name: Create the test subnet
+      os_subnet:
+        auth:
+          auth_url: https://{{ os_host }}:13000/v3
+          username: "{{os_user }}"
+          password: "{{ os_password }}"
+          project_name: "{{ os_project }}"
+          domain_name: hailstorm
+        validate_certs: no
+        region_name: regionOne
+        state: present
+        network_name: "{{ os_network_name }}"
+        name: "{{ os_network_name + '_sub'}}"
+        ip_version: 4
+        cidr: 172.23.0.0/16
+        gateway_ip: 172.23.0.1
+        enable_dhcp: yes
+        dns_nameservers:
+          - 10.116.57.11
+      when: os_network_name == "web-server"
 
     - name: Create the test router
       ignore_errors: yes #for some reasons, re-running this task gives errors
