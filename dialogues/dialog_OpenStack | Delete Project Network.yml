@@ -115,12 +115,8 @@
         required: true
         required_method: 
         required_method_options: {}
-        default_value: "!"
+        default_value: 
         values:
-        - - "!"
-          - "-- select from list --"
-        - - openstack.hailstorm6.coe.muc.redhat.com
-          - RHOSP Overcloud3
         values_method: 
         values_method_options: {}
         options:
