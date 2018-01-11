@@ -4,9 +4,6 @@
   connection: local
   environment:
     OS_IDENTITY_API_VERSION: 3
-    http_proxy: 
-    https_proxy: 
-
 
   tasks:
     - debug: var=os_host
