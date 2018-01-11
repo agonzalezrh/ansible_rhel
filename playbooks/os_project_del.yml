@@ -4,8 +4,7 @@
   connection: local
   environment:
     OS_IDENTITY_API_VERSION: 3
-    http_proxy: ''
-    https_proxy: ''
+    no_proxy: https://{{ os_host }}:13000/v3
 
   tasks:
     - debug: var=os_host
