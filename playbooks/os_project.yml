@@ -153,3 +153,7 @@
         role: admin
         project: "{{ os_project }}"
 
+# openstack role add --project nameofproject --user ID_user _member_ (or admin)
+# ODER
+# openstack role add --project nameofproject --user-domain rh-sddc.test-bosch.com --user username _member_ (or admin)
+
