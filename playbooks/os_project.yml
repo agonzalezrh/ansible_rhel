@@ -12,6 +12,12 @@
     - debug: var=os_password
     - debug: var=os_project
     - debug: var=os_projectdescription
+    
+    
+    - debug: msg={{ lookup('env','http_proxy') }}
+    - debug: msg={{ lookup('env','https_proxy') }}
+    - debug: msg={{ lookup('env','no_proxy') }}
+
 
     - name: Get Facts of Project
       os_project_facts:
